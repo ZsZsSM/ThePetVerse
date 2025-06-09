@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@RestController
+@RequestMapping("/api/pet")
 public class PetController {
 
     @Autowired
@@ -52,7 +54,6 @@ public class PetController {
         this.petService.deletePet(id);
         return ResponseEntity.noContent().build();
     }
-
 
 
 }
