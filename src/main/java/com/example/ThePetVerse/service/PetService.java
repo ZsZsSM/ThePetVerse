@@ -30,4 +30,14 @@ public class PetService {
         this.petRepository.deleteById(id);
     }
 
+    public Pet editPet(Integer id, Pet petEdit) {
+        Optional<Pet> petOp=this.petRepository.findById(id);
+        if(petOp.isPresent()){
+            Pet pet=petOp.get();
+            pet=petEdit;
+            return this.petRepository.save(pet);
+        }
+        return null;
+    }
+
 }
