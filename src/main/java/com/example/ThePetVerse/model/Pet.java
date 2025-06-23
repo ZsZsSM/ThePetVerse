@@ -1,14 +1,14 @@
 package com.example.ThePetVerse.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 
 @Entity
 @Table(name="tb_pet")
 public class Pet {
 
     @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String age;
