@@ -44,6 +44,14 @@ public class FacturaController {
                 "total", total
         );
     }
+    @DeleteMapping("/{facturaId}/productos/{productoId}")
+    public ResponseEntity<Factura> eliminarProductoDeFactura(
+            @PathVariable Long facturaId,
+            @PathVariable Long productoId) {
+
+        Factura facturaActualizada = service.eliminarProducto(facturaId, productoId);
+        return ResponseEntity.ok(facturaActualizada);
+    }
     @DeleteMapping
     public ResponseEntity<Void> eliminarTodasLasFacturas() {
         service.deleteAll(); // o usa service

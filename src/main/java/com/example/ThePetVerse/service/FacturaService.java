@@ -36,6 +36,20 @@ public class FacturaService {
                     .mapToDouble(Products::getPrecio)
                     .sum();
         }
+    public Factura eliminarProducto(Long facturaId, Long productoId) {
+        Factura factura = facturaRepo.findById(facturaId)
+                .orElseThrow(() -> new RuntimeException("Factura no encontrada con ID: " + facturaId));
+
+        Products producto = productoRepo.findById(productoId)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + productoId));
+
+        if (factura.getProductos().contains(producto)) {
+            factura.getProductos().remove(producto);
+            return facturaRepo.save(factura);
+        } else {
+            throw new IllegalArgumentException("Producto no está en la factura");
+        }
+    }
 
         public Factura obtenerPorId(Long id) {
             return facturaRepo.findById(id).orElseThrow();
