@@ -31,8 +31,8 @@ public class WebSecurityConfig {
     @Autowired
     UserDetailsServiceImpl userDetailsService; // Nuestro servicio para cargar detalles de usuario
 
-    @Autowired
-    private AuthEntryPointJwt unauthorizedHandler; // Manejador para errores de autenticación (401 Unauthorized)
+@Autowired
+  private AuthEntryPointJwt unauthorizedHandler; // Manejador para errores de autenticación (401 Unauthorized)
 
     @Bean // Marca este metodo como un bean de Spring
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -67,6 +67,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/**").permitAll() // Permite acceso público a rutas de autenticación
                                 .requestMatchers("/api/test/**").permitAll() // Permite acceso público a rutas de prueba (si las tuvieras)
+                                .requestMatchers("/api/pet/**").permitAll()
                                 .requestMatchers("/error").permitAll() // Permite acceso público a la ruta /error
                                 .anyRequest().authenticated() // Cualquier otra petición requiere autenticación
                 );
