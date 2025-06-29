@@ -15,7 +15,7 @@ public class PetService {
     private PetRepository petRepository;
 
     public Pet savePet(Pet pet){
-        return petRepository.save(pet);
+        return this.petRepository.save(pet);
     }
 
     public List<Pet> findAllPet(){
@@ -31,11 +31,12 @@ public class PetService {
     }
 
     public Pet editPet(Integer id, Pet petEdit) {
-        Optional<Pet> petOp=this.petRepository.findById(id);
-        if(petOp.isPresent()){
-            Pet pet=petOp.get();
-            pet=petEdit;
-            return this.petRepository.save(pet);
+        Optional<Pet> petOp = this.petRepository.findById(id);
+        if (petOp.isPresent()) {
+            // Asegúrate que el objeto petEdit tenga el id correcto
+            petEdit.setId(id);
+            // Guarda el objeto completamente nuevo en la base (reemplaza el anterior)
+            return this.petRepository.save(petEdit);
         }
         return null;
     }
