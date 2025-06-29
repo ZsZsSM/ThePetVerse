@@ -10,12 +10,20 @@ public class Pet {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String age;
+    @Column(nullable = false)
     private String size;
+    @Column(nullable = false)
     private Double weight;
+    @Column(nullable = false)
     private String breed;
+    @Column(nullable = false)
     private String animal;
+    @Column(nullable = false)
     private Boolean castration;
 
     public Pet() {

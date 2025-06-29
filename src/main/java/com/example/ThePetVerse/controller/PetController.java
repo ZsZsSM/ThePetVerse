@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:5500")
 @RestController
 @RequestMapping("/api/pet")
 public class PetController {
@@ -45,10 +44,6 @@ public class PetController {
                 errors.put(error.getField(), error.getDefaultMessage());
             }
             return ResponseEntity.badRequest().body(errors);
-            }
-        Optional <Pet> petOp=this.petService.findByIDPet(pet.getId());
-        if(petOp.isPresent()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("The pet with the id" + pet.getId() + "already exists");
         }
         Pet petSave=this.petService.savePet(pet);
         return ResponseEntity.status(HttpStatus.CREATED).body(petSave);
@@ -73,15 +68,8 @@ public class PetController {
             }
             return ResponseEntity.badRequest().body(errors);
         }
-        Optional<Pet> userOp = this.petService.findByIDPet(id);
-        if (!userOp.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("The pet with the id " + id + " ISNT registred");
-        }
         return ResponseEntity.ok(this.petService.editPet(id, petEdit));
     }
-
-
 }
-
 
 
