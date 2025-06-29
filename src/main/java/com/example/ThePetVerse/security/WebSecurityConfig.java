@@ -14,9 +14,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // Para
 import org.springframework.security.crypto.password.PasswordEncoder; // Interfaz para codificador de contraseñas
 import org.springframework.security.web.SecurityFilterChain; // Para construir la cadena de filtros de seguridad
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter; // Filtro para el AuthTokenFilter
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration // Marca esta clase como una clase de configuración de Spring
-@EnableWebSecurity // Habilita las características de seguridad web de Spring
 @EnableMethodSecurity // Habilita la seguridad a nivel de metodo (ej. @PreAuthorize)
 // (securedEnabled = true,
 // jsr250Enabled = true,
@@ -62,7 +67,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/**").permitAll() // Permite acceso público a rutas de autenticación
                                 .requestMatchers("/api/test/**").permitAll() // Permite acceso público a rutas de prueba (si las tuvieras)
-                                .requestMatchers("/error").permitAll()
+                                .requestMatchers("/error").permitAll() // Permite acceso público a la ruta /error
                                 .anyRequest().authenticated() // Cualquier otra petición requiere autenticación
                 );
 
@@ -72,6 +77,29 @@ public class WebSecurityConfig {
         // Agrega nuestro filtro JWT antes del filtro de autenticación de usuario/contraseña de Spring
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
+        // --- AÑADE ESTO para la configuración de CORS ---
+        // Integra la configuración CORS definida por el bean corsConfigurationSource()
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+        // --------------------------------------------------
+
         return http.build(); // Construye y devuelve la cadena de filtros de seguridad
+    }
+
+    // --- AÑADE ESTE NUEVO BEAN para la fuente de configuración CORS ---
+    // Define las reglas de CORS para tu aplicación
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // ¡ESTAS SON LAS URLs EXACTAS DE TU LIVE SERVER!
+        // Basado en tu último log, el origen de tu frontend es 'http://127.0.0.1:5500'
+        // Es una buena práctica incluir ambos por si acaso Live Server cambia
+        configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:5500"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos HTTP permitidos
+        configuration.setAllowedHeaders(List.of("*")); // Permite todos los headers
+        configuration.setAllowCredentials(true); // Permite el envío de cookies o headers de autorización (JWT)
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // Aplica esta configuración a todas las rutas de la API
+        return source;
     }
 }

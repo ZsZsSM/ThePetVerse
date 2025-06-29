@@ -1,87 +1,93 @@
 package com.example.ThePetVerse.controller;
 
-import com.example.ThePetVerse.model.User; // Importa tu entidad User
-import com.example.ThePetVerse.model.DTO.JwtResponse; // Importa tu DTO JwtResponse
-import com.example.ThePetVerse.model.DTO.LoginRequest; // Importa tu DTO LoginRequest
-import com.example.ThePetVerse.repository.UserRepository; // Importa tu UserRepository
-import com.example.ThePetVerse.security.JwtUtils; // Importa tu JwtUtils
-import com.example.ThePetVerse.security.UserDetailsImpl; // Importa UserDetailsImpl
-import org.springframework.beans.factory.annotation.Autowired; // Para inyección de dependencias
-import org.springframework.http.ResponseEntity; // Para construir respuestas HTTP
-import org.springframework.security.authentication.AuthenticationManager; // Para manejar la autenticación
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken; // Token de autenticación
-import org.springframework.security.core.Authentication; // Objeto de autenticación de Spring Security
-import org.springframework.security.core.context.SecurityContextHolder; // Para establecer el contexto de seguridad
-import org.springframework.security.crypto.password.PasswordEncoder; // Para encriptar contraseñas
-import org.springframework.web.bind.annotation.*; // Anotaciones REST
+// Importaciones de clases DTO, ahora apuntando a 'model.dto' (asegúrate de que estas rutas sean correctas)
+import com.example.ThePetVerse.model.DTO.LoginRequest;
+import com.example.ThePetVerse.model.DTO.SignupRequest;
+import com.example.ThePetVerse.model.DTO.JwtResponse;
+import com.example.ThePetVerse.model.DTO.MessageResponse;
 
-import jakarta.validation.Valid; // Para la validación de DTOs
+// Resto de importaciones necesarias
+import com.example.ThePetVerse.repository.UserRepository; // Necesitarás este
+import com.example.ThePetVerse.model.User; // Asegúrate de que esta importación sea correcta
+import com.example.ThePetVerse.security.JwtUtils;
+import com.example.ThePetVerse.security.UserDetailsImpl;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*", maxAge = 3600) // Permite peticiones CORS desde cualquier origen
-@RestController // Marca esta clase como un controlador REST
-@RequestMapping("/api/auth") // Mapea todas las peticiones a esta URL base
+// Eliminamos las importaciones de Set, List, Collectors, HashSet, ERole, RoleRepository, Role
+
+@RestController
+@RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
-    AuthenticationManager authenticationManager; // Inyecta el AuthenticationManager
+    AuthenticationManager authenticationManager;
 
     @Autowired
-    UserRepository userRepository; // Inyecta el UserRepository
+    UserRepository userRepository; // Necesitas este repositorio
+
+    // @Autowired RoleRepository roleRepository; // ELIMINADO: No estamos usando roles
 
     @Autowired
-    PasswordEncoder encoder; // Inyecta el PasswordEncoder
+    PasswordEncoder encoder;
 
     @Autowired
-    JwtUtils jwtUtils; // Inyecta el JwtUtils
+    JwtUtils jwtUtils;
 
-    @PostMapping("/signin") // Mapea las peticiones POST a /api/auth/signin
+    @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-        // 1. Autenticar al usuario
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-        // 2. Establecer la autenticación en el contexto de seguridad de Spring
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        // 3. Generar el token JWT
         String jwt = jwtUtils.generateJwtToken(authentication);
 
-        // 4. Obtener los detalles del usuario autenticado
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        // ELIMINADO: No generamos lista de roles si no los usamos
+        // List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
 
-        // 5. Devolver la respuesta JWT (con el token, nombre de usuario, etc.)
+        // Asegúrate que tu JwtResponse tenga un constructor que acepte:
+        // (String jwt, Long id, String username, String email)
+        // sin el campo 'roles' al final si no lo vas a usar.
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
-                userDetails.getEmail()));
+                userDetails.getEmail()
+                /* , roles */ // ELIMINADO: No pasamos roles
+        ));
     }
 
-    // Este metodo es un placeholder para el registro de usuarios.
-    // Aún no lo implementaremos completamente, pero lo dejamos aquí.
-    @PostMapping("/signup") // Mapea las peticiones POST a /api/auth/signup
-    public ResponseEntity<?> registerUser(@Valid @RequestBody User signupRequest) {
-        // En una implementación real, aquí deberías:
-        // 1. Verificar si el username/email ya existe.
-        if (userRepository.existsByUsername(signupRequest.getUsername())) {
+    @PostMapping("/signup")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+
+        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
-                    .body("Error: ¡El nombre de usuario ya está en uso!");
+                    .body(new MessageResponse("Error: ¡El nombre de usuario ya está en uso!"));
         }
 
-        if (userRepository.existsByEmail(signupRequest.getEmail())) {
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body("Error: ¡El correo electrónico ya está en uso!");
+                    .body(new MessageResponse("Error: ¡El correo electrónico ya está en uso!"));
         }
 
-        // 2. Crear un nuevo objeto User.
-        User user = new User(signupRequest.getUsername(),
-                signupRequest.getEmail(),
-                encoder.encode(signupRequest.getPassword())); // ¡Importante: encriptar la contraseña!
+        // Crear una nueva cuenta de usuario
+        User user = new User(); // Asumiendo constructor vacío en la clase User
+        user.setUsername(signUpRequest.getUsername());
+        user.setEmail(signUpRequest.getEmail());
+        user.setPassword(encoder.encode(signUpRequest.getPassword())); // Encripta la contraseña
 
-        // 3. Guardar el usuario en la base de datos.
         userRepository.save(user);
 
-        return ResponseEntity.ok("Usuario registrado exitosamente!");
+        return ResponseEntity.ok(new MessageResponse("¡Usuario registrado exitosamente!"));
     }
 }
+
