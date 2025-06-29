@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // Para
 import org.springframework.security.crypto.password.PasswordEncoder; // Interfaz para codificador de contraseñas
 import org.springframework.security.web.SecurityFilterChain; // Para construir la cadena de filtros de seguridad
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter; // Filtro para el AuthTokenFilter
+
 @Configuration // Marca esta clase como una clase de configuración de Spring
 @EnableWebSecurity // Habilita las características de seguridad web de Spring
 @EnableMethodSecurity // Habilita la seguridad a nivel de metodo (ej. @PreAuthorize)
@@ -61,6 +62,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/**").permitAll() // Permite acceso público a rutas de autenticación
                                 .requestMatchers("/api/test/**").permitAll() // Permite acceso público a rutas de prueba (si las tuvieras)
+                                .requestMatchers("/error").permitAll()
                                 .anyRequest().authenticated() // Cualquier otra petición requiere autenticación
                 );
 
