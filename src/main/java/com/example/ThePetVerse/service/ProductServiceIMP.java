@@ -1,8 +1,7 @@
 package com.example.ThePetVerse.service;
 
 
-import com.example.ThePetVerse.model.Productos;
-import com.example.ThePetVerse.repository.PetRepository;
+import com.example.ThePetVerse.model.Products;
 import com.example.ThePetVerse.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,31 +14,33 @@ public class ProductServiceIMP implements ProductService {
 
 
     @Autowired
-    private ProductRepository productRepository;
+    private ProductRepository repo;
 
     @Override
-    public List<Productos> getAll() {
-        return productRepository.findAll();
+    public List<Products> getAll() {
+        return repo.findAll();
     }
 
     @Override
-    public Optional<Productos> getById(Long id) {
-        return productRepository.findById(id);
+    public Optional<Products> getById(Long id) {
+        return repo.findById(id);
     }
 
     @Override
-    public Productos save(Productos product) {
-        return productRepository.save(product);
+    public Products save(Products producto) {
+        return repo.save(producto);
     }
 
     @Override
     public void delete(Long id) {
-        productRepository.deleteById(id);
+        repo.deleteById(id);
+    }
+    @Override
+    public List<Products> searchByName(String nombre) {
+        return repo.findByNombreContaining(nombre);
     }
 
-    @Override
-    public List<Productos> searchByName(String nombre) {
-        return productRepository.findByNombreContaining(nombre);
-
+    public void deleteAll() {
+        repo.deleteAll();
     }
 }

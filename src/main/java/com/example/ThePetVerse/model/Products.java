@@ -1,37 +1,39 @@
 package com.example.ThePetVerse.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
-public class Productos {
+@Table(name="tb_products")
+public class Products {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private long id;
+    private Long id;
     private String nombre;
     private double precio;
     private int stock;
 
-    public Productos(long id) {
+    public Products(Long id) {
         this.id = id;
     }
 
-    public Productos(long id, String nombre, double precio, int stock) {
+    public Products(){
+
+    }
+
+    public Products(Long id, String nombre, double precio, int stock) {
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
         this.stock = stock;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
