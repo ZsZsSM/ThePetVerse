@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity //Entidad para poder trabajarla en mysql
 @Table(name="users",  //creamos la tabla users
-        uniqueConstraints = { //le definimos que deben haber valores unicos para cada usuario que se registe
+        uniqueConstraints = { //le definimos que deben haber valores unicos para cada usuario que se registre
                 @UniqueConstraint(columnNames = "username"), // un unico nombre de usuario
                 @UniqueConstraint(columnNames = "email") }) // un unico email
 public class User {

@@ -21,8 +21,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
+///Corazón de la configuración de seguridad
 @Configuration // Marca esta clase como una clase de configuración de Spring
-@EnableMethodSecurity // Habilita la seguridad a nivel de metodo (ej. @PreAuthorize)
+@EnableMethodSecurity // Habilita la seguridad a nivel de metodo propiedades (ej. @PreAuthorize)
 // (securedEnabled = true,
 // jsr250Enabled = true,
 // prePostEnabled = true)
@@ -80,7 +81,6 @@ public class WebSecurityConfig {
         // Agrega nuestro filtro JWT antes del filtro de autenticación de usuario/contraseña de Spring
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        // --- AÑADE ESTO para la configuración de CORS ---
         // Integra la configuración CORS definida por el bean corsConfigurationSource()
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         // --------------------------------------------------

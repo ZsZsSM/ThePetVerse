@@ -5,22 +5,18 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.util.Set;
-
+// Define y valida los datos que se esperan cuando un nuevo usuario intenta registrarse (crear una cuenta)
 public class SignupRequest {
-    @NotBlank
+    @NotBlank (message = "El nombre de usuario es obligatorio ♡") // Valida que no esté vacío
     @Size(min = 3, max = 20)
     private String username;
 
-    @NotBlank
+    @NotBlank(message = "El correo electrónico es obligatorio ♡") // Valida que no esté vacío
     @Size(max = 50)
     @Email
     private String email;
 
-    // Este campo 'role' es opcional y permite asignar roles durante el registro.
-    // Si tu frontend no envía roles, este Set será nulo y el backend asignará ROLE_USER por defecto.
-    private Set<String> role;
-
-    @NotBlank
+    @NotBlank(message = "La contraseña es obligatoria ♡") // Valida que no esté vacío
     @Size(min = 6, max = 40)
     private String password;
 
@@ -28,12 +24,11 @@ public class SignupRequest {
     public SignupRequest() {
     }
 
-    // Constructor con parámetros (opcional)
-    public SignupRequest(String username, String email, String password, Set<String> role) {
+    // Constructor con parámetros
+    public SignupRequest(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 
     // Getters y Setters
@@ -51,14 +46,6 @@ public class SignupRequest {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Set<String> getRole() {
-        return this.role;
-    }
-
-    public void setRole(Set<String> role) {
-        this.role = role;
     }
 
     public String getPassword() {
