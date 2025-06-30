@@ -86,13 +86,10 @@ public class WebSecurityConfig {
         return http.build(); // Construye y devuelve la cadena de filtros de seguridad
     }
 
-    // --- AÑADE ESTE NUEVO BEAN para la fuente de configuración CORS ---
     // Define las reglas de CORS para tu aplicación
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // ¡ESTAS SON LAS URLs EXACTAS DE TU LIVE SERVER!
-        // Basado en tu último log, el origen de tu frontend es 'http://127.0.0.1:5500'
         // Es una buena práctica incluir ambos por si acaso Live Server cambia
         configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:5500"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos HTTP permitidos
