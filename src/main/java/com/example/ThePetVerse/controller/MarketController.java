@@ -16,6 +16,7 @@ import java.util.List;
 public class MarketController {
     @Autowired
     private ProductService service;
+    @Autowired
     private FacturaService facturaService;
 
     @GetMapping
