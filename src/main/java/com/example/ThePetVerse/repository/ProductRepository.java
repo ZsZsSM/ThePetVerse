@@ -1,12 +1,11 @@
 package com.example.ThePetVerse.repository;
 
-import com.example.ThePetVerse.model.Pet;
-import com.example.ThePetVerse.model.Productos;
+import com.example.ThePetVerse.model.Products;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ProductRepository extends JpaRepository<Productos, Long> {
+public interface ProductRepository extends JpaRepository<Products, Long> {
 
-    List<Productos> findByNombreContaining(String nombre);
+    List<Products> findByNombreContaining(String nombre);
 }

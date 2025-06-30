@@ -1,14 +1,16 @@
 package com.example.ThePetVerse.service;
 
-import com.example.ThePetVerse.model.Productos;
+import com.example.ThePetVerse.model.Products;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
-    List<Productos> getAll();
-    Optional<Productos> getById(Long id);
-    Productos save(Productos product);
+    List<Products> getAll();
+    Optional<Products> getById(Long id);
+    Products save(Products product);
     void delete(Long id);
-    List<Productos> searchByName(String nombre);
+    List<Products> searchByName(String nombre);
+    void deleteAll();
+
 }
