@@ -50,6 +50,13 @@ public class FacturaService {
             throw new IllegalArgumentException("Producto no está en la factura");
         }
     }
+    public void eliminarTodasLasReferenciasDeProductos() {
+        List<Factura> facturas = facturaRepo.findAll();
+        for (Factura factura : facturas) {
+            factura.getProductos().clear();
+            facturaRepo.save(factura);
+        }
+    }
 
         public Factura obtenerPorId(Long id) {
             return facturaRepo.findById(id).orElseThrow();

@@ -52,6 +52,7 @@ public class FacturaController {
         Factura facturaActualizada = service.eliminarProducto(facturaId, productoId);
         return ResponseEntity.ok(facturaActualizada);
     }
+
     @DeleteMapping
     public ResponseEntity<Void> eliminarTodasLasFacturas() {
         service.deleteAll(); // o usa service
