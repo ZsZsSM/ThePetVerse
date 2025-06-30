@@ -1,7 +1,12 @@
 package com.example.ThePetVerse.model.DTO;
 
+// Paquete de información que el servidor le entrega al cliente
 public class JwtResponse {
+    //Esta es la pieza más importante
+    // Aquí se guarda el JWT (Json Web Token) que el servidor ha generado para el usuario recién autenticado
+    // Este token es lo que el cliente usará en futuras solicitudes para probar que está autenticado y tiene permiso para acceder a recursos protegidos
     private String token; // El token JWT real
+    // Ttipo de token más común para los JWT
     private String type = "Bearer"; // Tipo de token, por convención "Bearer"
     private Integer id; // ID del usuario
     private String username; // Nombre de usuario
