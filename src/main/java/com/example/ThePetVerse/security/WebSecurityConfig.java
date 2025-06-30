@@ -68,6 +68,8 @@ public class WebSecurityConfig {
                         auth.requestMatchers("/api/auth/**").permitAll() // Permite acceso público a rutas de autenticación
                                 .requestMatchers("/api/test/**").permitAll() // Permite acceso público a rutas de prueba (si las tuvieras)
                                 .requestMatchers("/api/pet/**").permitAll()
+                                .requestMatchers("/api/products/**").permitAll()
+                                .requestMatchers("/api/facturas/**").permitAll()
                                 .requestMatchers("/error").permitAll() // Permite acceso público a la ruta /error
                                 .anyRequest().authenticated() // Cualquier otra petición requiere autenticación
                 );
